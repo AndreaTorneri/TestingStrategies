@@ -1,0 +1,19 @@
+#!/bin/bash -l
+#PBS -l nodes=1:ppn=35
+#PBS -l walltime=47:59:00
+
+module load R/3.6.0-foss-2018a-bare
+
+out=$VSC_SCRATCH/testing/${childseed}-${R_s}/${scenario}/${id}/
+mkdir -p $out
+
+cores=-1
+
+soft=~/projects/TestingStrategies/
+cd ${soft}
+
+echo "Rscript ${soft}/mainTesting.R ${out} ${cores} ${test_sens_as} ${test_delay_as} ${test_sens_s} ${test_delay_s} ${screening_delay} ${n_test_week} ${prop_lambda_w} ${strategy} ${timewindow_closure} ${threshold_school} ${threshold_class} ${R_s} ${prop_immune_child} ${prop_immune_adult} ${alpha_as} ${childseed}" > ${out}/${id}.cmd
+
+Rscript ${soft}/mainTesting.R ${out} ${cores} ${test_sens_as} ${test_delay_as} ${test_sens_s} ${test_delay_s} ${screening_delay} ${n_test_week} ${prop_lambda_w} ${strategy} ${timewindow_closure} ${threshold_school} ${threshold_class} ${R_s} ${prop_immune_child} ${prop_immune_adult} ${alpha_as} ${childseed} > ${out}/${id}.out 2> ${out}/${id}.err
+
+plot_vsc_scenario.sh $VSC_SCRATCH/testing/ ${R_s} ${childseed} 
